@@ -19,6 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'active' => \App\Http\Middleware\EnsureUserIsActive::class,
         ]);
 
+        // Wompi envía eventos sin token CSRF; se validan con su firma.
+        $middleware->validateCsrfTokens(except: ['webhooks/*']);
+
         $middleware->redirectGuestsTo(fn () => route('login'));
         $middleware->redirectUsersTo(fn () => route('admin.dashboard'));
     })

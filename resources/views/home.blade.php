@@ -89,5 +89,8 @@
     {{-- Voluntariado --}}
     @include('volunteers._section')
 
+    {{-- Aportes --}}
+    @include('donations._cta')
+
     @stack('home-sections')
 @endsection
