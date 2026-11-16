@@ -3,26 +3,16 @@ name: Tests
 on:
   push:
     branches:
-      - master
-      - '*.x'
+      - main
   pull_request:
-  schedule:
-    - cron: '0 0 * * *'
 
 permissions:
   contents: read
 
 jobs:
-  tests:
+  sqlite:
+    name: PHP 8.3 · SQLite
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: true
-      matrix:
-        php: [8.3, 8.4, 8.5]
-
-    name: PHP ${{ matrix.php }}
-
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -30,20 +20,69 @@ jobs:
           persist-credentials: false
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2.40.0
         with:
-          php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
+          php-version: '8.3'
+          extensions: dom, curl, libxml, mbstring, zip, pdo, sqlite, pdo_sqlite, gd
           coverage: none
 
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
 
-      - name: Copy environment file
-        run: cp .env.example .env
-
-      - name: Generate app key
-        run: php artisan key:generate
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
 
       - name: Execute tests
+        run: php artisan test
+
+  mariadb:
+    name: PHP 8.3 · MariaDB 11.8
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:11.8
+        env:
+          MARIADB_ROOT_PASSWORD: secret
+          MARIADB_DATABASE: laura_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    env:
+      DB_CONNECTION: mariadb
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: laura_test
+      DB_USERNAME: root
+      DB_PASSWORD: secret
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2.40.0
+        with:
+          php-version: '8.3'
+          extensions: dom, curl, libxml, mbstring, zip, pdo, pdo_mysql, gd
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Run migrations on MariaDB (como en producción)
+        run: php artisan migrate --force --seed
+
+      - name: Execute tests on MariaDB
         run: php artisan test
