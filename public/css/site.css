@@ -277,3 +277,18 @@ p { margin: 0; }
 .band-blue .h2 { color: #fff; }
 .thanks { padding-bottom: 24px; }
 .has-error > .check { color: var(--red); }
+
+/* Donaciones */
+.align-start { align-items: start; }
+.amounts { border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.amounts legend { padding: 0; margin-bottom: 8px; }
+.amount-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+.amount-option { position: relative; display: block; cursor: pointer; text-decoration: none; }
+.amount-option input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.amount-option span { display: flex; align-items: center; justify-content: center; padding: 14px 10px; border: 2px solid var(--line); background: #fff; color: var(--ink); font: 700 18px var(--sans); border-radius: var(--radius); transition: border-color .15s, background .15s; }
+.amount-option:hover span { border-color: var(--navy); }
+.amount-option input:checked + span { background: var(--navy); border-color: var(--navy); color: #fff; }
+.amount-option input:focus-visible + span { outline: 3px solid var(--gold); outline-offset: 2px; }
+.custom-amount[hidden] { display: none; }
+.small-text { font-size: 13px; }
+.form-card-white .form-grid { margin-top: 4px; }

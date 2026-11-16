@@ -7,6 +7,9 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\SeoController;
 use App\Http\Controllers\VolunteerController;
+use App\Http\Controllers\DonationController;
+use App\Http\Controllers\WompiWebhookController;
+use App\Http\Controllers\Admin\DonationController as AdminDonationController;
 use App\Http\Controllers\Admin\VolunteerController as AdminVolunteerController;
 use App\Support\Permissions;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +27,10 @@ Route::get('/noticias/{news}', [PublicController::class, 'newsShow'])->name('new
 Route::get('/voluntarios', [VolunteerController::class, 'create'])->name('volunteers.create');
 Route::post('/voluntarios', [VolunteerController::class, 'store'])->middleware('throttle:10,1')->name('volunteers.store');
 Route::get('/voluntarios/gracias', [VolunteerController::class, 'thanks'])->name('volunteers.thanks');
+Route::get('/donar', [DonationController::class, 'create'])->name('donations.create');
+Route::post('/donar', [DonationController::class, 'store'])->middleware('throttle:10,1')->name('donations.store');
+Route::get('/donar/resultado', [DonationController::class, 'result'])->name('donations.result');
+Route::post('/webhooks/wompi', WompiWebhookController::class)->middleware('throttle:120,1')->name('webhooks.wompi');
 Route::get('/terminos-y-condiciones', [PublicController::class, 'terms'])->name('terms');
 Route::get('/politica-de-privacidad', [PublicController::class, 'privacy'])->name('privacy');
 
@@ -62,6 +69,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'active', 'permissio
         Route::get('/voluntarios/{volunteer}', [AdminVolunteerController::class, 'show'])->name('volunteers.show');
         Route::delete('/voluntarios/{volunteer}', [AdminVolunteerController::class, 'destroy'])
             ->middleware('permission:'.Permissions::VOLUNTEERS_DELETE)->name('volunteers.destroy');
+    });
+
+    Route::middleware('permission:'.Permissions::DONATIONS_VIEW)->group(function () {
+        Route::get('/donaciones', [AdminDonationController::class, 'index'])->name('donations.index');
+        Route::get('/donaciones/exportar', [AdminDonationController::class, 'export'])
+            ->middleware('permission:'.Permissions::DONATIONS_EXPORT)->name('donations.export');
+        Route::get('/donaciones/{donation}', [AdminDonationController::class, 'show'])->name('donations.show');
     });
 
     Route::middleware('permission:'.Permissions::USERS_MANAGE)->group(function () {

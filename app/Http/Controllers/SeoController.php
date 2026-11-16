@@ -15,6 +15,7 @@ class SeoController extends Controller
             ['loc' => route('proposals'), 'priority' => '0.9', 'changefreq' => 'monthly'],
             ['loc' => route('news.index'), 'priority' => '0.8', 'changefreq' => 'daily'],
             ['loc' => route('volunteers.create'), 'priority' => '0.7', 'changefreq' => 'monthly'],
+            ['loc' => route('donations.create'), 'priority' => '0.6', 'changefreq' => 'monthly'],
             ['loc' => route('terms'), 'priority' => '0.2', 'changefreq' => 'yearly'],
             ['loc' => route('privacy'), 'priority' => '0.2', 'changefreq' => 'yearly'],
         ];
@@ -33,6 +34,8 @@ class SeoController extends Controller
             'Allow: /',
             'Disallow: /admin',
             'Disallow: /login',
+            'Disallow: /webhooks',
+            'Disallow: /donar/resultado',
             '',
             '# Asistentes de IA: bienvenidos a leer el contenido público',
             'User-agent: GPTBot',

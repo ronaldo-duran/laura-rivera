@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Models\Donation;
 use App\Models\News;
 use App\Models\User;
 use App\Models\Volunteer;
@@ -33,6 +34,15 @@ class AdminDashboard
                 'value' => number_format(Volunteer::count(), 0, ',', '.'),
                 'hint' => 'Ver voluntarios',
                 'url' => route('admin.volunteers.index'),
+            ];
+        }
+
+        if ($user->can(Permissions::DONATIONS_VIEW)) {
+            $cards[] = [
+                'title' => 'Donaciones aprobadas',
+                'value' => Donation::money(Donation::approved()->sum('amount_in_cents') / 100),
+                'hint' => Donation::approved()->count().' aportes · ver donaciones',
+                'url' => route('admin.donations.index'),
             ];
         }
 
