@@ -86,6 +86,70 @@
         });
     }
 
+    // ---- Métricas de clics, desplazamiento y tiempo (solo con consentimiento "all") ----
+    var metricsOn = false;
+    function initMetrics() {
+        if (metricsOn || window.LR.consent() !== 'all' || !navigator.sendBeacon) return;
+        var meta = document.querySelector('meta[name="lr-metrics"]');
+        if (!meta) return;
+        metricsOn = true;
+        var endpoint = meta.getAttribute('content');
+        var path = location.pathname;
+
+        // Identificador anónimo del visitante (cookie de medición, 13 meses)
+        if (!readCookie('lr_vid')) {
+            var id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+                : 'v' + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+            writeCookie('lr_vid', id, 395);
+        }
+
+        function send(events) {
+            try {
+                navigator.sendBeacon(endpoint, new Blob([JSON.stringify({ events: events })], { type: 'application/json' }));
+            } catch (e) { /* las métricas nunca deben romper el sitio */ }
+        }
+
+        document.addEventListener('click', function (e) {
+            var el = e.target.closest('a, button, [data-track], summary, [role="tab"]');
+            if (!el || el.closest('[data-cookie-banner]')) return;
+            var href = el.getAttribute('href') || '';
+            var type = 'click';
+            if (/^tel:/i.test(href)) type = 'tel';
+            else if (/^mailto:/i.test(href)) type = 'mailto';
+            else if (/wa\.me|whatsapp\.com/i.test(href)) type = 'whatsapp';
+            else if (/\.(pdf|docx?|xlsx?|zip)(\?|$)/i.test(href)) type = 'download';
+            else if (el.host && el.host !== location.host) type = 'outbound';
+            var label = el.getAttribute('data-track') || el.getAttribute('aria-label') || (el.textContent || '').replace(/\s+/g, ' ').trim();
+            send([{ type: type, label: label.slice(0, 150), target: href.slice(0, 500), path: path }]);
+        }, { capture: true, passive: true });
+
+        // Profundidad de desplazamiento: 25/50/75/100 %, una vez por página
+        var marks = [25, 50, 75, 100], sent = {};
+        function onScroll() {
+            var h = document.documentElement;
+            var max = h.scrollHeight - window.innerHeight;
+            var pct = max <= 0 ? 100 : Math.round((window.scrollY / max) * 100);
+            marks.forEach(function (m) {
+                if (pct >= m && !sent[m]) { sent[m] = true; send([{ type: 'scroll', label: m + '%', path: path, value: m }]); }
+            });
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+        // Tiempo activo en la página, al salir u ocultar la pestaña
+        var start = Date.now(), active = 0;
+        document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === 'hidden') {
+                active += Date.now() - start;
+                var secs = Math.round(active / 1000);
+                if (secs > 0) send([{ type: 'engagement', label: 'segundos', path: path, value: Math.min(secs, 86400) }]);
+                active = 0;
+            } else {
+                start = Date.now();
+            }
+        });
+    }
+    document.addEventListener('lr:consent', initMetrics);
+
     function ready(fn) {
         if (document.readyState !== 'loading') fn();
         else document.addEventListener('DOMContentLoaded', fn);
@@ -95,5 +159,6 @@
         initNav();
         initTabs();
         initCookies();
+        initMetrics();
     });
 })();

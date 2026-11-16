@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schedule;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
+// Requiere en Hostinger un cron cada minuto: php artisan schedule:run
+// (opcional: sin cron, simplemente no se borran las métricas antiguas).
+Schedule::command('app:podar-metricas')->dailyAt('03:30');

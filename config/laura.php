@@ -14,6 +14,13 @@ return [
     // IPs de proxies/CDN de confianza separadas por coma, o "*". Vacío por defecto.
     'trusted_proxies' => env('TRUSTED_PROXIES'),
 
+    // Métricas propias (sin Google Analytics ni terceros).
+    'metricas' => [
+        'activas' => (bool) env('METRICS_ENABLED', true),
+        // Días que se conservan las visitas y eventos (app:podar-metricas).
+        'retencion_dias' => (int) env('METRICS_RETENTION_DAYS', 400),
+    ],
+
     'persona' => [
         'nombre' => 'Laura Rivera',
         'nombre_completo' => 'Laura Milagros Rivera Rodríguez',

@@ -5,6 +5,8 @@ namespace App\Support;
 use App\Models\Donation;
 use App\Models\News;
 use App\Models\User;
+use App\Models\Visit;
+use App\Support\Analytics\SourceClassifier;
 use App\Models\Volunteer;
 use Illuminate\Support\Facades\Route;
 
@@ -43,6 +45,17 @@ class AdminDashboard
                 'value' => Donation::money(Donation::approved()->sum('amount_in_cents') / 100),
                 'hint' => Donation::approved()->count().' aportes · ver donaciones',
                 'url' => route('admin.donations.index'),
+            ];
+        }
+
+        if ($user->can(Permissions::METRICS_VIEW)) {
+            $entries = Visit::humans()->where('is_entry', true)->where('created_at', '>=', now()->subDays(6)->startOfDay());
+            $ai = (clone $entries)->where('channel', SourceClassifier::AI)->count();
+            $cards[] = [
+                'title' => 'Visitas (7 días)',
+                'value' => number_format($entries->count(), 0, ',', '.'),
+                'hint' => $ai.' llegaron por IA · ver métricas',
+                'url' => route('admin.metrics.index', ['dias' => 7]),
             ];
         }
 
