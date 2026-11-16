@@ -35,6 +35,7 @@ class SeoController extends Controller
             'Disallow: /admin',
             'Disallow: /login',
             'Disallow: /webhooks',
+            'Disallow: /metricas',
             'Disallow: /donar/resultado',
             '',
             '# Asistentes de IA: bienvenidos a leer el contenido público',

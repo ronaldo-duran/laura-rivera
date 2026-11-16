@@ -19,6 +19,7 @@
     <meta name="author" content="{{ $p['nombre_completo'] }}">
     <meta name="theme-color" content="#0b2a5b">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="lr-metrics" content="{{ route('metrics.event', absolute: false) }}">
 
     {{-- Open Graph / redes sociales --}}
     <meta property="og:locale" content="es_CO">

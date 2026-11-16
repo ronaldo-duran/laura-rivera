@@ -19,8 +19,15 @@ return Application::configure(basePath: dirname(__DIR__))
             'active' => \App\Http\Middleware\EnsureUserIsActive::class,
         ]);
 
-        // Wompi envía eventos sin token CSRF; se validan con su firma.
-        $middleware->validateCsrfTokens(except: ['webhooks/*']);
+        // Wompi envía eventos sin token CSRF (se validan con su firma) y las
+        // métricas llegan por sendBeacon (sin efectos sobre datos de usuarios).
+        $middleware->validateCsrfTokens(except: ['webhooks/*', 'metricas/evento']);
+
+        // Cookies que escribe site.js en el navegador (no van cifradas).
+        $middleware->encryptCookies(except: ['lr_consent', 'lr_vid']);
+
+        // Métricas de visitas del sitio público.
+        $middleware->web(append: [\App\Http\Middleware\TrackVisit::class]);
 
         $middleware->redirectGuestsTo(fn () => route('login'));
         $middleware->redirectUsersTo(fn () => route('admin.dashboard'));

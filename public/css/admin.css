@@ -121,3 +121,29 @@ td.empty { border: 0; }
 .login-head h1 { font-size: 19px; }
 .login-head p { margin: 0; color: var(--muted); font-size: 14px; }
 .login-back { font-size: 14px; text-align: center; }
+.thumb { max-width: 220px; border-radius: 6px; border: 1px solid var(--line); margin-top: 6px; }
+
+/* Métricas */
+.segmented { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #fff; flex-wrap: wrap; }
+.segmented a { padding: 8px 14px; text-decoration: none; color: var(--ink); font-weight: 600; font-size: 14px; border-right: 1px solid var(--line); }
+.segmented a:last-child { border-right: 0; }
+.segmented a.is-active { background: var(--navy); color: #fff; }
+.card-gold { border-top-color: var(--gold); }
+.panel-title { font-size: 16px; margin-bottom: 14px; }
+.panel-sub { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 18px 0 10px; }
+.grid-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 16px; align-items: start; }
+.bars { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.bars li { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(60px, 1fr) auto; gap: 10px; align-items: center; font-size: 14px; }
+.bars-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bars-track { height: 8px; background: #efece3; border-radius: 4px; overflow: hidden; }
+.bars-fill { display: block; height: 100%; background: var(--navy); border-radius: 4px; }
+.bars-value { font-variant-numeric: tabular-nums; font-weight: 600; min-width: 2.5em; text-align: right; }
+.daychart { display: flex; align-items: flex-end; gap: 2px; height: 160px; border-bottom: 1px solid var(--line); }
+.daychart-col { flex: 1; height: 100%; display: flex; align-items: flex-end; min-width: 2px; }
+.daychart-bar { width: 100%; background: var(--navy); border-radius: 3px 3px 0 0; display: flex; align-items: flex-end; overflow: hidden; }
+.daychart-ai { width: 100%; background: var(--gold); }
+.daychart-axis { display: flex; justify-content: space-between; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+.key { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; margin: 0 4px 0 8px; }
+.key-views { background: var(--navy); }
+.key-ai { background: var(--gold); }
+.table-compact th, .table-compact td { padding: 7px 10px; font-size: 14px; }

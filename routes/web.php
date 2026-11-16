@@ -8,6 +8,9 @@ use App\Http\Controllers\PublicController;
 use App\Http\Controllers\SeoController;
 use App\Http\Controllers\VolunteerController;
 use App\Http\Controllers\DonationController;
+use App\Http\Controllers\MetricsEventController;
+use App\Http\Controllers\Admin\MetricsController;
+use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\WompiWebhookController;
 use App\Http\Controllers\Admin\DonationController as AdminDonationController;
 use App\Http\Controllers\Admin\VolunteerController as AdminVolunteerController;
@@ -31,6 +34,7 @@ Route::get('/donar', [DonationController::class, 'create'])->name('donations.cre
 Route::post('/donar', [DonationController::class, 'store'])->middleware('throttle:10,1')->name('donations.store');
 Route::get('/donar/resultado', [DonationController::class, 'result'])->name('donations.result');
 Route::post('/webhooks/wompi', WompiWebhookController::class)->middleware('throttle:120,1')->name('webhooks.wompi');
+Route::post('/metricas/evento', MetricsEventController::class)->middleware('throttle:120,1')->name('metrics.event');
 Route::get('/terminos-y-condiciones', [PublicController::class, 'terms'])->name('terms');
 Route::get('/politica-de-privacidad', [PublicController::class, 'privacy'])->name('privacy');
 
@@ -62,6 +66,17 @@ Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'active', 'permission:'.Permissions::DASHBOARD_VIEW])->group(function () {
     Route::get('/', DashboardController::class)->name('dashboard');
 
+    Route::middleware('permission:'.Permissions::NEWS_MANAGE)->group(function () {
+        Route::resource('noticias', AdminNewsController::class)
+            ->parameters(['noticias' => 'news'])->except('show')->names('news');
+    });
+
+    Route::middleware('permission:'.Permissions::METRICS_VIEW)->group(function () {
+        Route::get('/metricas', [MetricsController::class, 'index'])->name('metrics.index');
+        Route::get('/metricas/visitas', [MetricsController::class, 'visits'])->name('metrics.visits');
+        Route::get('/metricas/exportar', [MetricsController::class, 'export'])->name('metrics.export');
+    });
+
     Route::middleware('permission:'.Permissions::VOLUNTEERS_VIEW)->group(function () {
         Route::get('/voluntarios', [AdminVolunteerController::class, 'index'])->name('volunteers.index');
         Route::get('/voluntarios/exportar', [AdminVolunteerController::class, 'export'])
@@ -87,3 +102,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'active', 'permissio
         Route::resource('roles', RoleController::class)->except('show')->names('roles');
     });
 });
+
+// Cualquier otra dirección: 404 con el diseño del sitio (y queda registrada en métricas).
+Route::fallback(fn () => abort(404));
