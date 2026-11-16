@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class CreateAdminCommandTest extends TestCase
@@ -13,7 +14,7 @@ class CreateAdminCommandTest extends TestCase
     public function test_command_creates_admin(): void
     {
         $this->artisan('app:crear-admin', [
-            '--name' => 'Laura Rivera', '--email' => 'laura@example.com', '--password' => 'Segura12345',
+            '--name' => 'Laura Rivera', '--email' => 'laura@example.com', '--password' => Str::random(12).'a1',
         ])->assertSuccessful();
 
         $user = User::where('email', 'laura@example.com')->firstOrFail();
@@ -26,7 +27,7 @@ class CreateAdminCommandTest extends TestCase
         User::factory()->create(['email' => 'ya@example.com']);
 
         $this->artisan('app:crear-admin', [
-            '--name' => 'Ya Existe', '--email' => 'ya@example.com', '--password' => 'Segura12345',
+            '--name' => 'Ya Existe', '--email' => 'ya@example.com', '--password' => Str::random(12).'a1',
         ])->assertSuccessful();
 
         $this->assertSame(1, User::count());

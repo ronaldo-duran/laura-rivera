@@ -5,9 +5,16 @@ namespace Tests\Concerns;
 use App\Models\User;
 use App\Support\Permissions;
 use Database\Seeders\RolesAndPermissionsSeeder;
+use Illuminate\Support\Str;
 
 trait CreatesUsers
 {
+    /** Contraseña válida generada en cada prueba (sin credenciales fijas en el código). */
+    protected function makePassword(): string
+    {
+        return Str::random(12).'a1';
+    }
+
     protected function seedRoles(): void
     {
         $this->seed(RolesAndPermissionsSeeder::class);

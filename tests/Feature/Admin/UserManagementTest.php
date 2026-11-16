@@ -23,18 +23,19 @@ class UserManagementTest extends TestCase
 
     public function test_admin_creates_user_with_role(): void
     {
+        $pw = $this->makePassword();
         $this->actingAs($this->admin())->post(route('admin.users.store'), [
             'name' => 'Carlos Contador',
             'email' => 'carlos@example.com',
-            'password' => 'Contable2026',
-            'password_confirmation' => 'Contable2026',
+            'password' => $pw,
+            'password_confirmation' => $pw,
             'roles' => [Permissions::ROLE_ACCOUNTING],
             'active' => '1',
         ])->assertRedirect(route('admin.users.index'));
 
         $user = User::where('email', 'carlos@example.com')->firstOrFail();
         $this->assertTrue($user->hasRole(Permissions::ROLE_ACCOUNTING));
-        $this->assertTrue(Hash::check('Contable2026', $user->password));
+        $this->assertTrue(Hash::check($pw, $user->password));
         $this->assertTrue($user->active);
     }
 
@@ -50,9 +51,10 @@ class UserManagementTest extends TestCase
 
     public function test_unknown_role_is_rejected(): void
     {
+        $pw = $this->makePassword();
         $this->actingAs($this->admin())->post(route('admin.users.store'), [
             'name' => 'X', 'email' => 'x@example.com',
-            'password' => 'Valida12345', 'password_confirmation' => 'Valida12345',
+            'password' => $pw, 'password_confirmation' => $pw,
             'roles' => ['superpoderes'],
         ])->assertSessionHasErrors('roles.0');
     }

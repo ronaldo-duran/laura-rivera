@@ -23,9 +23,10 @@ class AuthTest extends TestCase
 
     public function test_admin_can_log_in_and_last_login_is_recorded(): void
     {
-        $user = $this->admin(['email' => 'laura@example.com', 'password' => 'Secreta12345']);
+        $pw = $this->makePassword();
+        $user = $this->admin(['email' => 'laura@example.com', 'password' => $pw]);
 
-        $this->post('/login', ['email' => 'laura@example.com', 'password' => 'Secreta12345'])
+        $this->post('/login', ['email' => 'laura@example.com', 'password' => $pw])
             ->assertRedirect(route('admin.dashboard'));
 
         $this->assertAuthenticatedAs($user);
@@ -34,7 +35,8 @@ class AuthTest extends TestCase
 
     public function test_wrong_password_is_rejected(): void
     {
-        $this->admin(['email' => 'laura@example.com', 'password' => 'Secreta12345']);
+        $pw = $this->makePassword();
+        $this->admin(['email' => 'laura@example.com', 'password' => $pw]);
 
         $this->from('/login')->post('/login', ['email' => 'laura@example.com', 'password' => 'otra'])
             ->assertRedirect('/login')
@@ -45,9 +47,10 @@ class AuthTest extends TestCase
 
     public function test_inactive_user_cannot_log_in(): void
     {
-        $this->admin(['email' => 'off@example.com', 'password' => 'Secreta12345', 'active' => false]);
+        $pw = $this->makePassword();
+        $this->admin(['email' => 'off@example.com', 'password' => $pw, 'active' => false]);
 
-        $this->post('/login', ['email' => 'off@example.com', 'password' => 'Secreta12345'])
+        $this->post('/login', ['email' => 'off@example.com', 'password' => $pw])
             ->assertSessionHasErrors('email');
 
         $this->assertGuest();
@@ -66,13 +69,14 @@ class AuthTest extends TestCase
 
     public function test_login_is_rate_limited_after_five_attempts(): void
     {
-        $this->admin(['email' => 'laura@example.com', 'password' => 'Secreta12345']);
+        $pw = $this->makePassword();
+        $this->admin(['email' => 'laura@example.com', 'password' => $pw]);
 
         for ($i = 0; $i < 5; $i++) {
             $this->post('/login', ['email' => 'laura@example.com', 'password' => 'mala']);
         }
 
-        $this->post('/login', ['email' => 'laura@example.com', 'password' => 'Secreta12345'])
+        $this->post('/login', ['email' => 'laura@example.com', 'password' => $pw])
             ->assertSessionHasErrors('email');
         $this->assertStringContainsString('Demasiados intentos', session('errors')->first('email'));
         $this->assertGuest();
