@@ -1,0 +1,134 @@
+name: Build & Deploy (producción)
+
+# Al crear un tag "v*" (por ejemplo v1.0.0) en este repositorio:
+#   1. Instala dependencias de PHP sin dev y optimizadas (vendor/).
+#   2. Publica el resultado (incluyendo vendor/) en el repo
+#      ronaldo-duran/laura-rivera-produccion, rama main.
+# En ese repo, otro workflow avisa a Hostinger para que actualice.
+#
+# NOTA sobre assets: el sitio usa CSS/JS planos en public/ (public/css,
+# public/js) por diseño, para no necesitar Node en Hostinger. Por eso aquí
+# NO se corre "vite build": no hay nada que compilar y evitamos una descarga
+# externa de fuentes que podría romper el despliegue. Si en el futuro las
+# plantillas pasan a usar @vite, descomentar el paso "Compilar assets".
+#
+# Requiere el secreto PRODUCCION_DEPLOY_TOKEN (ver README → Despliegue).
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-produccion
+  cancel-in-progress: false
+
+jobs:
+  build-and-push:
+    name: Compilar y publicar en el repo de producción
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar código fuente
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Configurar PHP 8.3
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2.40.0
+        with:
+          php-version: '8.3'
+          extensions: dom, curl, libxml, mbstring, zip, pdo, pdo_mysql, gd
+          coverage: none
+
+      - name: Instalar dependencias de PHP (sin dev, optimizadas)
+        run: composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction --no-progress
+
+      # Paso opcional para el futuro (si las plantillas adoptan @vite):
+      # - name: Compilar assets con Vite
+      #   run: |
+      #     npm install --no-audit --no-fund
+      #     npm run build
+
+      - name: Determinar versión
+        id: version
+        run: |
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Preparar árbol de despliegue
+        run: |
+          rm -rf deploy-tree
+          mkdir deploy-tree
+          rsync -a ./ deploy-tree/ \
+            --exclude='.git' \
+            --exclude='deploy-tree' \
+            --exclude='node_modules' \
+            --exclude='tests' \
+            --exclude='.github' \
+            --exclude='.env' \
+            --exclude='.env.*' \
+            --exclude='auth.json' \
+            --exclude='storage/logs/*' \
+            --exclude='storage/framework/cache/data/*' \
+            --exclude='storage/framework/sessions/*' \
+            --exclude='storage/framework/views/*' \
+            --exclude='*.sqlite'
+          # El repo de producción SÍ versiona vendor/ y public/build para que
+          # Hostinger despliegue con un simple "git pull" (sin Composer pesado
+          # ni Node). Este .gitignore reemplaza al del repo fuente.
+          cat > deploy-tree/.gitignore <<'EOF'
+          .env
+          .env.*
+          auth.json
+          /storage/logs/*
+          !/storage/logs/.gitignore
+          /storage/framework/cache/data/*
+          !/storage/framework/cache/data/.gitignore
+          /storage/framework/sessions/*
+          !/storage/framework/sessions/.gitignore
+          /storage/framework/views/*
+          !/storage/framework/views/.gitignore
+          /bootstrap/cache/*.php
+          /public/storage
+          *.sqlite
+          EOF
+
+      - name: Publicar en el repo de producción
+        env:
+          TOKEN: ${{ secrets.PRODUCCION_DEPLOY_TOKEN }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Falta el secreto PRODUCCION_DEPLOY_TOKEN. Ver README → Despliegue."
+            exit 1
+          fi
+          git clone --depth 1 "https://x-access-token:${TOKEN}@github.com/ronaldo-duran/laura-rivera-produccion.git" prod
+          # --delete borra en producción lo que ya no exista en el fuente,
+          # pero conserva el .git y el .github (workflow de Hostinger) del repo destino.
+          rsync -a --delete \
+            --exclude='.git' \
+            --exclude='.github' \
+            deploy-tree/ prod/
+          cd prod
+          git config user.name "deploy-bot"
+          git config user.email "deploy@laurarivera.com.co"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Sin cambios que publicar."
+            exit 0
+          fi
+          git commit -m "Release ${TAG:-manual} (origen: ${GITHUB_SHA})"
+          if [ -n "${TAG}" ]; then
+            git tag -f "${TAG}"
+          fi
+          git push origin HEAD:main
+          if [ -n "${TAG}" ]; then
+            git push -f origin "refs/tags/${TAG}"
+          fi
