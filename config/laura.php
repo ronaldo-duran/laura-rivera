@@ -11,6 +11,9 @@
 
 return [
 
+    // IPs de proxies/CDN de confianza separadas por coma, o "*". Vacío por defecto.
+    'trusted_proxies' => env('TRUSTED_PROXIES'),
+
     'persona' => [
         'nombre' => 'Laura Rivera',
         'nombre_completo' => 'Laura Milagros Rivera Rodríguez',
