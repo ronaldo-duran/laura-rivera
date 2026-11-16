@@ -267,3 +267,13 @@ p { margin: 0; }
     .site-header, .cookie-banner, .site-footer, .flag-bar { display: none !important; }
     body { background: #fff; }
 }
+
+/* Voluntariado */
+.eyebrow-gold { color: var(--gold); }
+.on-navy { color: var(--on-navy); }
+.check-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.check-list li { padding-left: 26px; position: relative; }
+.check-list li::before { content: '✓'; position: absolute; left: 0; color: var(--gold); font-weight: 700; }
+.band-blue .h2 { color: #fff; }
+.thanks { padding-bottom: 24px; }
+.has-error > .check { color: var(--red); }

@@ -119,6 +119,25 @@ return [
 
     'habilidades' => ['Liderazgo', 'Resolución de problemas', 'Pensamiento analítico', 'Gerencia de proyectos'],
 
+    // Registro de voluntarios
+    'tipos_documento' => [
+        'CC' => 'Cédula de ciudadanía',
+        'TI' => 'Tarjeta de identidad',
+        'CE' => 'Cédula de extranjería',
+        'PA' => 'Pasaporte',
+        'PPT' => 'Permiso por Protección Temporal (PPT)',
+        'PEP' => 'Permiso Especial de Permanencia (PEP)',
+    ],
+
+    // "¿Cómo nos referimos a usted?"
+    'tratamientos' => [
+        'senora' => 'Señora',
+        'senor' => 'Señor',
+        'nombre' => 'Solo por mi nombre',
+    ],
+
+    'terminos_version' => '2026-11-16',
+
     'barrios' => ['Centro histórico', 'La Parada', 'Juan Frío', 'Lomitas', 'San Gregorio', 'Palogordo', 'Otro'],
 
     'tipos_voluntariado' => ['Testigo electoral', 'Puerta a puerta', 'Logística y eventos', 'Redes sociales', 'Otro'],
