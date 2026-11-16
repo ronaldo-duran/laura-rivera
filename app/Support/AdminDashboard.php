@@ -4,6 +4,7 @@ namespace App\Support;
 
 use App\Models\News;
 use App\Models\User;
+use App\Models\Volunteer;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -23,6 +24,15 @@ class AdminDashboard
                 'value' => number_format(News::published()->count(), 0, ',', '.'),
                 'hint' => 'Gestionar noticias',
                 'url' => Route::has('admin.news.index') ? route('admin.news.index') : null,
+            ];
+        }
+
+        if ($user->can(Permissions::VOLUNTEERS_VIEW)) {
+            $cards[] = [
+                'title' => 'Voluntarios registrados',
+                'value' => number_format(Volunteer::count(), 0, ',', '.'),
+                'hint' => 'Ver voluntarios',
+                'url' => route('admin.volunteers.index'),
             ];
         }
 

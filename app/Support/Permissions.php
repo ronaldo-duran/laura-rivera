@@ -19,6 +19,8 @@ final class Permissions
 
     public const VOLUNTEERS_EXPORT = 'voluntarios.exportar';
 
+    public const VOLUNTEERS_DELETE = 'voluntarios.eliminar';
+
     public const DONATIONS_VIEW = 'donaciones.ver';
 
     public const DONATIONS_EXPORT = 'donaciones.exportar';
@@ -43,6 +45,7 @@ final class Permissions
             self::NEWS_MANAGE => 'Crear, editar y publicar noticias',
             self::VOLUNTEERS_VIEW => 'Ver voluntarios registrados',
             self::VOLUNTEERS_EXPORT => 'Exportar voluntarios (CSV)',
+            self::VOLUNTEERS_DELETE => 'Eliminar voluntarios (solicitudes de supresión de datos)',
             self::DONATIONS_VIEW => 'Ver donaciones',
             self::DONATIONS_EXPORT => 'Exportar donaciones (CSV)',
             self::METRICS_VIEW => 'Ver métricas de visitas',

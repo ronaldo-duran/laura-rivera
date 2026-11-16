@@ -14,6 +14,7 @@ class SeoController extends Controller
             ['loc' => route('about'), 'priority' => '0.9', 'changefreq' => 'monthly'],
             ['loc' => route('proposals'), 'priority' => '0.9', 'changefreq' => 'monthly'],
             ['loc' => route('news.index'), 'priority' => '0.8', 'changefreq' => 'daily'],
+            ['loc' => route('volunteers.create'), 'priority' => '0.7', 'changefreq' => 'monthly'],
             ['loc' => route('terms'), 'priority' => '0.2', 'changefreq' => 'yearly'],
             ['loc' => route('privacy'), 'priority' => '0.2', 'changefreq' => 'yearly'],
         ];

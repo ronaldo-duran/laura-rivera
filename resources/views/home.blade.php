@@ -86,5 +86,8 @@
         </section>
     @endif
 
+    {{-- Voluntariado --}}
+    @include('volunteers._section')
+
     @stack('home-sections')
 @endsection
