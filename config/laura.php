@@ -14,6 +14,11 @@ return [
     // IPs de proxies/CDN de confianza separadas por coma, o "*". Vacío por defecto.
     'trusted_proxies' => env('TRUSTED_PROXIES'),
 
+    // Versión de la aplicación (fuente única). Se muestra en el panel admin.
+    // Al publicar, subir este número y crear el tag de release "v<versión>"
+    // (p. ej. v1.0.0) en el repo principal para que el pipeline despliegue.
+    'version' => env('APP_VERSION', '1.0.0'),
+
     // Donaciones en línea (Wompi). Interruptor general: mientras se consulta
     // con la parte jurídica si se pueden recibir aportes, se deja apagado.
     // Con DONATIONS_ENABLED=false la sección se oculta del menú y del sitemap,

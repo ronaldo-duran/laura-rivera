@@ -21,6 +21,15 @@ class AuthTest extends TestCase
         $this->get('/login')->assertOk()->assertSee('noindex, nofollow', false);
     }
 
+    public function test_admin_panel_shows_application_version(): void
+    {
+        $this->assertNotEmpty(config('laura.version'));
+
+        $this->actingAs($this->admin())->get('/admin')
+            ->assertOk()
+            ->assertSee('v'.config('laura.version'));
+    }
+
     public function test_admin_can_log_in_and_last_login_is_recorded(): void
     {
         $pw = $this->makePassword();
