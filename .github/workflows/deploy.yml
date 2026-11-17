@@ -76,11 +76,11 @@ jobs:
             --exclude='.env.backup' \
             --exclude='.env.production' \
             --exclude='auth.json' \
-            --exclude='storage/logs/*' \
-            --exclude='storage/framework/cache/data/*' \
-            --exclude='storage/framework/sessions/*' \
-            --exclude='storage/framework/views/*' \
             --exclude='*.sqlite'
+          # NOTA: no se excluye storage/: el checkout de CI solo trae la
+          # estructura de carpetas con sus .gitignore (sin datos de runtime),
+          # y el repo de producción necesita esas carpetas (p. ej.
+          # storage/framework/views) para que Laravel compile las vistas.
           # El repo de producción SÍ versiona vendor/ y public/build para que
           # Hostinger despliegue con un simple "git pull" (sin Composer pesado
           # ni Node). Este .gitignore reemplaza al del repo fuente.
