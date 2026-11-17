@@ -38,7 +38,7 @@ Sitio web oficial de {!! $p['nombre_completo'] !!}, empresaria, abogada y gerent
 - {!! $e['titulo'] !!}, {!! $e['org'] !!} ({!! $e['fecha'] !!})
 @endforeach
 
-## Propuestas para {!! $p['municipio'] !!}
+## Visión para {!! $p['municipio'] !!}
 
 @foreach (config('laura.ejes') as $eje)
 ### {!! $eje['nombre'] !!}
@@ -54,7 +54,7 @@ Sitio web oficial de {!! $p['nombre_completo'] !!}, empresaria, abogada y gerent
 
 - [Inicio]({!! route('home') !!})
 - [Quién es Laura]({!! route('about') !!}): biografía, hoja de vida y formación
-- [Propuestas]({!! route('proposals') !!})
+- [Visión del municipio]({!! route('vision') !!})
 - [Noticias]({!! route('news.index') !!})
 @if ($news->isNotEmpty())
 

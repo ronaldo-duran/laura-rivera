@@ -15,7 +15,7 @@ class VisitFactory extends Factory
         return [
             'session_hash' => hash('sha256', $this->faker->uuid()),
             'is_entry' => true,
-            'path' => $this->faker->randomElement(['/', '/quien-es-laura', '/propuestas', '/voluntarios']),
+            'path' => $this->faker->randomElement(['/', '/quien-es-laura', '/vision-del-municipio', '/voluntarios']),
             'route' => 'home',
             'status' => 200,
             'channel' => SourceClassifier::DIRECT,

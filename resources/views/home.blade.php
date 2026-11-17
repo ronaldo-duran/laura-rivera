@@ -14,7 +14,7 @@
             <h1 class="display">{!! $hero['titulo'] !!}</h1>
             <p class="lead lead-lg">{{ $hero['subtitulo'] }}</p>
             <div class="btn-row">
-                <a href="{{ route('proposals') }}" class="btn btn-blue">Conozca las propuestas</a>
+                <a href="{{ route('vision') }}" class="btn btn-blue">Conozca la visión</a>
                 @if (Route::has('volunteers.create'))
                     <a href="{{ route('volunteers.create') }}" class="btn btn-outline">Únase como voluntario</a>
                 @else
@@ -40,13 +40,13 @@
         </div>
     </section>
 
-    {{-- Propuestas --}}
-    <section id="propuestas" class="section container stack-lg">
+    {{-- Visión del municipio --}}
+    <section id="vision" class="section container stack-lg">
         <div class="section-head-simple">
-            <span class="eyebrow">Ideas para el municipio</span>
-            <h2 class="h2">Propuestas para {{ $p['municipio'] }}</h2>
+            <span class="eyebrow">Una visión para el municipio</span>
+            <h2 class="h2">Visión para {{ $p['municipio'] }}</h2>
         </div>
-        @include('partials.proposals')
+        @include('partials.vision')
     </section>
 
     {{-- Trayectoria --}}
@@ -90,7 +90,9 @@
     @include('volunteers._section')
 
     {{-- Aportes --}}
-    @include('donations._cta')
+    @if (config('laura.donaciones.activas'))
+        @include('donations._cta')
+    @endif
 
     @stack('home-sections')
 @endsection

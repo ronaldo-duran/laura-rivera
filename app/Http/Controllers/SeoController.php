@@ -12,13 +12,16 @@ class SeoController extends Controller
         $static = [
             ['loc' => route('home'), 'priority' => '1.0', 'changefreq' => 'weekly'],
             ['loc' => route('about'), 'priority' => '0.9', 'changefreq' => 'monthly'],
-            ['loc' => route('proposals'), 'priority' => '0.9', 'changefreq' => 'monthly'],
+            ['loc' => route('vision'), 'priority' => '0.9', 'changefreq' => 'monthly'],
             ['loc' => route('news.index'), 'priority' => '0.8', 'changefreq' => 'daily'],
             ['loc' => route('volunteers.create'), 'priority' => '0.7', 'changefreq' => 'monthly'],
-            ['loc' => route('donations.create'), 'priority' => '0.6', 'changefreq' => 'monthly'],
             ['loc' => route('terms'), 'priority' => '0.2', 'changefreq' => 'yearly'],
             ['loc' => route('privacy'), 'priority' => '0.2', 'changefreq' => 'yearly'],
         ];
+
+        if (config('laura.donaciones.activas')) {
+            $static[] = ['loc' => route('donations.create'), 'priority' => '0.6', 'changefreq' => 'monthly'];
+        }
 
         $news = News::published()->latest('published_at')->get(['slug', 'updated_at']);
 

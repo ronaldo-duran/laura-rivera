@@ -4,7 +4,7 @@
 |--------------------------------------------------------------------------
 | Contenido del sitio de Laura Rivera
 |--------------------------------------------------------------------------
-| Datos relativamente estáticos (biografía, hoja de vida, propuestas).
+| Datos relativamente estáticos (biografía, hoja de vida, visión del municipio).
 | Las noticias viven en base de datos y se gestionan desde el panel admin.
 | Lenguaje neutral: se presenta a Laura como EMPRESARIA, no como "candidata".
 */
@@ -13,6 +13,19 @@ return [
 
     // IPs de proxies/CDN de confianza separadas por coma, o "*". Vacío por defecto.
     'trusted_proxies' => env('TRUSTED_PROXIES'),
+
+    // Versión de la aplicación (fuente única). Se muestra en el panel admin.
+    // Al publicar, subir este número y crear el tag de release "v<versión>"
+    // (p. ej. v1.0.0) en el repo principal para que el pipeline despliegue.
+    'version' => env('APP_VERSION', '1.0.0'),
+
+    // Donaciones en línea (Wompi). Interruptor general: mientras se consulta
+    // con la parte jurídica si se pueden recibir aportes, se deja apagado.
+    // Con DONATIONS_ENABLED=false la sección se oculta del menú y del sitemap,
+    // y las rutas públicas /donar responden 404. El webhook de Wompi sigue activo.
+    'donaciones' => [
+        'activas' => (bool) env('DONATIONS_ENABLED', false),
+    ],
 
     // Métricas propias (sin Google Analytics ni terceros).
     'metricas' => [
@@ -147,7 +160,7 @@ return [
 
     'barrios' => ['Centro histórico', 'La Parada', 'Juan Frío', 'Lomitas', 'San Gregorio', 'Palogordo', 'Otro'],
 
-    'tipos_voluntariado' => ['Testigo electoral', 'Puerta a puerta', 'Logística y eventos', 'Redes sociales', 'Otro'],
+    'tipos_voluntariado' => ['Líder de zona', 'Trabajo social en barrios y veredas', 'Logística y eventos', 'Comunicación y redes sociales', 'Otro'],
 
     'montos_donacion' => [20000, 50000, 100000, 250000],
 ];

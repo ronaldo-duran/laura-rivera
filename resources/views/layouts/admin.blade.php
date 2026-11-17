@@ -37,6 +37,7 @@
             </nav>
             <div class="admin-side-foot">
                 <a href="{{ route('home') }}" target="_blank" rel="noopener">Ver sitio ↗</a>
+                <span class="admin-version">v{{ config('laura.version') }}</span>
             </div>
         </aside>
 

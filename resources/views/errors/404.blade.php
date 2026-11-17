@@ -15,7 +15,7 @@
         <p>
             <a href="{{ route('home') }}" class="btn btn-blue">Ir al inicio</a>
             <a href="{{ route('about') }}" class="text-link">Quién es Laura</a> ·
-            <a href="{{ route('proposals') }}" class="text-link">Propuestas</a> ·
+            <a href="{{ route('vision') }}" class="text-link">Visión del municipio</a> ·
             <a href="{{ route('news.index') }}" class="text-link">Noticias</a>
         </p>
     </section>

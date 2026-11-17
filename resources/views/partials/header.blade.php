@@ -2,7 +2,7 @@
     $p = config('laura.persona');
     $nav = [
         ['label' => 'Quién es Laura', 'href' => route('about'), 'active' => request()->routeIs('about')],
-        ['label' => 'Propuestas', 'href' => route('proposals'), 'active' => request()->routeIs('proposals')],
+        ['label' => 'Visión del municipio', 'href' => route('vision'), 'active' => request()->routeIs('vision')],
         ['label' => 'Hoja de vida', 'href' => route('about').'#hoja-de-vida', 'active' => false],
         ['label' => 'Noticias', 'href' => route('news.index'), 'active' => request()->routeIs('news.*')],
     ];
@@ -29,7 +29,7 @@
             @foreach ($nav as $item)
                 <a href="{{ $item['href'] }}" @class(['is-active' => $item['active']]) @if($item['active']) aria-current="page" @endif>{{ $item['label'] }}</a>
             @endforeach
-            @if (Route::has('donations.create'))
+            @if (config('laura.donaciones.activas'))
                 <a href="{{ route('donations.create') }}" class="btn btn-red nav-cta">Donar</a>
             @endif
         </nav>

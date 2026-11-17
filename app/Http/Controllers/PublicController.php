@@ -19,9 +19,9 @@ class PublicController extends Controller
         return view('about');
     }
 
-    public function proposals(): View
+    public function vision(): View
     {
-        return view('proposals');
+        return view('vision');
     }
 
     public function newsIndex(): View

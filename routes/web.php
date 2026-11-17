@@ -24,15 +24,21 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('/', [PublicController::class, 'home'])->name('home');
 Route::get('/quien-es-laura', [PublicController::class, 'about'])->name('about');
-Route::get('/propuestas', [PublicController::class, 'proposals'])->name('proposals');
+Route::get('/vision-del-municipio', [PublicController::class, 'vision'])->name('vision');
+// El slug anterior /propuestas redirige de forma permanente a la nueva sección.
+Route::permanentRedirect('/propuestas', '/vision-del-municipio');
 Route::get('/noticias', [PublicController::class, 'newsIndex'])->name('news.index');
 Route::get('/noticias/{news}', [PublicController::class, 'newsShow'])->name('news.show');
 Route::get('/voluntarios', [VolunteerController::class, 'create'])->name('volunteers.create');
 Route::post('/voluntarios', [VolunteerController::class, 'store'])->middleware('throttle:10,1')->name('volunteers.store');
 Route::get('/voluntarios/gracias', [VolunteerController::class, 'thanks'])->name('volunteers.thanks');
-Route::get('/donar', [DonationController::class, 'create'])->name('donations.create');
-Route::post('/donar', [DonationController::class, 'store'])->middleware('throttle:10,1')->name('donations.store');
-Route::get('/donar/resultado', [DonationController::class, 'result'])->name('donations.result');
+// Donaciones: el interruptor general (DONATIONS_ENABLED) las oculta y hace que
+// /donar responda 404. El webhook de Wompi (más abajo) queda fuera del interruptor.
+Route::middleware(\App\Http\Middleware\EnsureDonationsEnabled::class)->group(function () {
+    Route::get('/donar', [DonationController::class, 'create'])->name('donations.create');
+    Route::post('/donar', [DonationController::class, 'store'])->middleware('throttle:10,1')->name('donations.store');
+    Route::get('/donar/resultado', [DonationController::class, 'result'])->name('donations.result');
+});
 Route::post('/webhooks/wompi', WompiWebhookController::class)->middleware('throttle:120,1')->name('webhooks.wompi');
 Route::post('/metricas/evento', MetricsEventController::class)->middleware('throttle:120,1')->name('metrics.event');
 Route::get('/terminos-y-condiciones', [PublicController::class, 'terms'])->name('terms');

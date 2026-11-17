@@ -1,7 +1,7 @@
-{{-- Propuestas por eje. Todo el contenido está en el HTML (rastreable); JS solo alterna la vista. --}}
+{{-- Ejes de la visión del municipio. Todo el contenido está en el HTML (rastreable); JS solo alterna la vista. --}}
 @php $ejes = config('laura.ejes'); @endphp
 <div class="tabs" data-tabs>
-    <div class="tab-list" role="tablist" aria-label="Ejes de propuestas">
+    <div class="tab-list" role="tablist" aria-label="Ejes de la visión del municipio">
         @foreach ($ejes as $i => $eje)
             <button type="button" role="tab" class="tab" id="tab-{{ $eje['id'] }}"
                     aria-controls="panel-{{ $eje['id'] }}" aria-selected="{{ $i === 0 ? 'true' : 'false' }}"

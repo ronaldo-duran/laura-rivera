@@ -22,11 +22,11 @@ class VisitTrackingTest extends TestCase
 
     public function test_page_view_is_recorded_with_source_device_and_ip(): void
     {
-        $this->visit('/propuestas', ['Referer' => 'https://chatgpt.com/', 'Accept-Language' => 'es-CO,es;q=0.9'])->assertOk();
+        $this->visit('/vision-del-municipio', ['Referer' => 'https://chatgpt.com/', 'Accept-Language' => 'es-CO,es;q=0.9'])->assertOk();
 
         $v = Visit::sole();
-        $this->assertSame('/propuestas', $v->path);
-        $this->assertSame('proposals', $v->route);
+        $this->assertSame('/vision-del-municipio', $v->path);
+        $this->assertSame('vision', $v->route);
         $this->assertSame(SourceClassifier::AI, $v->channel);
         $this->assertSame('ChatGPT', $v->source_name);
         $this->assertSame('chatgpt.com', $v->referrer_host);

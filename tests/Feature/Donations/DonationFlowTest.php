@@ -15,6 +15,7 @@ class DonationFlowTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        config(['laura.donaciones.activas' => true]);
         $this->configureWompi();
     }
 
