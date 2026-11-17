@@ -157,6 +157,8 @@ actual de `main`, sin crear tag).
 
 > Ningún secreto se guarda en el código. Si falta `PRODUCCION_DEPLOY_TOKEN` o los `HOSTINGER_SSH_*`, el workflow correspondiente falla con un mensaje claro.
 
+> **Nota sobre repos privados:** como `laura-rivera-produccion` es privado, Hostinger necesita además un token de **solo lectura** para bajar el código (ver *Pasos manuales en Hostinger → paso 3*). Ese token **no** es un secreto de GitHub Actions: se usa una sola vez al clonar y queda guardado en el `.git/config` del servidor. Son dos tokens distintos: uno de **escritura** (`PRODUCCION_DEPLOY_TOKEN`, para que el repo fuente publique) y otro de **lectura** (en el servidor, para bajar).
+
 ### Pasos manuales en GitHub
 
 1. Crear el token fino: **GitHub → Settings (tu cuenta) → Developer settings → Personal access tokens → Fine-grained tokens → Generate**. *Resource owner*: tu cuenta; *Repository access*: solo `laura-rivera-produccion`; *Permissions*: `Contents` → *Read and write*. Copiar el token y pegarlo como `PRODUCCION_DEPLOY_TOKEN` en los secretos de `laura-rivera`.
@@ -172,10 +174,15 @@ actual de `main`, sin crear tag).
 
 1. **Activar SSH:** hPanel → *Avanzado → SSH access* → activar y anotar host, puerto y usuario.
 2. **Autorizar la llave de despliegue:** pegar el contenido de `deploy_key.pub` en *SSH access → Manage SSH keys* (o por SSH en `~/.ssh/authorized_keys`).
-3. **Clonar el repo de producción** (incluye `vendor/`, no hace falta Composer):
+3. **Clonar el repo de producción** (incluye `vendor/`, no hace falta Composer).
+   Como `laura-rivera-produccion` es **privado**, el servidor necesita leerlo con
+   un token de **solo lectura**. Crea un *Fine-grained personal access token*
+   aparte (**GitHub → Settings → Developer settings → Fine-grained tokens**):
+   *Repository access* solo `laura-rivera-produccion`, *Permissions* → `Contents`
+   = **Read-only**. Luego, con ese token en la URL:
    ```bash
    cd ~/domains/laurarivera.com.co
-   git clone https://github.com/ronaldo-duran/laura-rivera-produccion.git laura-rivera
+   git clone https://x-access-token:<TOKEN_SOLO_LECTURA>@github.com/ronaldo-duran/laura-rivera-produccion.git laura-rivera
    cd laura-rivera
    cp .env.example .env
    php artisan key:generate
@@ -185,6 +192,11 @@ actual de `main`, sin crear tag).
    php artisan app:crear-admin
    php artisan storage:link
    ```
+   El token queda guardado en el `.git/config` del servidor, así que los
+   despliegues siguientes (`git reset --hard origin/main` que hace el workflow)
+   funcionan solos. Si el token caduca, los despliegues fallan al bajar el
+   código: basta volver a poner un token nuevo en la URL del remoto con
+   `git remote set-url origin https://x-access-token:<TOKEN_NUEVO>@github.com/ronaldo-duran/laura-rivera-produccion.git`.
 4. **Carpeta pública:** `public_html` debe apuntar a `laura-rivera/public`:
    ```bash
    cd ~/domains/laurarivera.com.co
