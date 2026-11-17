@@ -8,7 +8,7 @@
         </div>
         <nav class="footer-col" aria-label="Pie de página">
             <a href="{{ route('about') }}">Quién es Laura</a>
-            <a href="{{ route('proposals') }}">Propuestas</a>
+            <a href="{{ route('vision') }}">Visión del municipio</a>
             <a href="{{ route('news.index') }}">Noticias</a>
             @if (Route::has('volunteers.create'))
                 <a href="{{ route('volunteers.create') }}">Voluntarios</a>

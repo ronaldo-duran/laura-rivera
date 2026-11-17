@@ -60,7 +60,7 @@ class SeoTest extends TestCase
     public function test_pages_have_unique_titles_and_descriptions(): void
     {
         $titles = [];
-        foreach (['/', '/quien-es-laura', '/propuestas', '/noticias'] as $uri) {
+        foreach (['/', '/quien-es-laura', '/vision-del-municipio', '/noticias'] as $uri) {
             $html = $this->get($uri)->getContent();
             preg_match('/<title>(.*?)<\/title>/s', $html, $t);
             preg_match('/<meta name="description" content="(.*?)">/s', $html, $d);

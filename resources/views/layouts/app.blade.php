@@ -36,7 +36,11 @@
 
     <link rel="alternate" type="text/plain" title="Resumen para asistentes de IA" href="{{ route('llms') }}">
     <link rel="sitemap" type="application/xml" href="{{ route('sitemap') }}">
-    <link rel="icon" href="{{ asset('favicon.ico') }}">
+    {{-- Favicon: monograma LR (navy/dorado) en varios formatos --}}
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="16x16 32x32 48x48">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

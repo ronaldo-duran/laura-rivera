@@ -15,6 +15,8 @@ class DonationController extends Controller
 
     public function create(): View
     {
+        abort_unless(config('laura.donaciones.activas'), 404);
+
         return view('donations.create', [
             'enabled' => $this->wompi->isConfigured(),
             'sandbox' => $this->wompi->isSandbox(),
@@ -24,6 +26,8 @@ class DonationController extends Controller
     /** Registra la intención de aporte y envía a la persona al checkout de Wompi. */
     public function store(StoreDonationRequest $request): RedirectResponse
     {
+        abort_unless(config('laura.donaciones.activas'), 404);
+
         if (filled($request->input('website'))) {
             return redirect()->route('donations.create');
         }
@@ -59,6 +63,8 @@ class DonationController extends Controller
      */
     public function result(Request $request): View
     {
+        abort_unless(config('laura.donaciones.activas'), 404);
+
         $donation = null;
         $transactionId = (string) $request->query('id', '');
 

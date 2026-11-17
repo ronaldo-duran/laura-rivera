@@ -16,7 +16,7 @@ class PublicPagesTest extends TestCase
         return [
             'inicio' => ['/'],
             'quién es laura' => ['/quien-es-laura'],
-            'propuestas' => ['/propuestas'],
+            'visión del municipio' => ['/vision-del-municipio'],
             'noticias' => ['/noticias'],
             'términos' => ['/terminos-y-condiciones'],
             'privacidad' => ['/politica-de-privacidad'],
@@ -69,7 +69,7 @@ class PublicPagesTest extends TestCase
 
     public function test_all_proposal_axes_are_rendered_in_html(): void
     {
-        $response = $this->get('/propuestas')->assertOk();
+        $response = $this->get('/vision-del-municipio')->assertOk();
 
         foreach (config('laura.ejes') as $eje) {
             $response->assertSee($eje['nombre']);
@@ -77,6 +77,17 @@ class PublicPagesTest extends TestCase
                 $response->assertSee($item);
             }
         }
+    }
+
+    public function test_vision_section_replaces_propuestas_and_old_slug_redirects(): void
+    {
+        // La sección ahora se llama "Visión del municipio" (tono neutral, sin campaña).
+        $this->get('/vision-del-municipio')->assertOk()->assertSee('Visión del municipio');
+        $this->get('/')->assertOk()->assertSee('Visión del municipio')->assertDontSee('>Propuestas<', false);
+
+        // El slug anterior redirige de forma permanente.
+        $this->get('/propuestas')->assertRedirect('/vision-del-municipio');
+        $this->assertSame(301, $this->get('/propuestas')->getStatusCode());
     }
 
     public function test_about_page_contains_cv(): void

@@ -23,7 +23,7 @@ class VolunteerRegistrationTest extends TestCase
             'email' => '  MARIA@Example.com ',
             'phone' => '+57 300 123 4567',
             'neighborhood' => 'La Parada',
-            'help_type' => 'Puerta a puerta',
+            'help_type' => 'Líder de zona',
             'accept_terms' => '1',
         ], $overrides);
     }
@@ -32,6 +32,20 @@ class VolunteerRegistrationTest extends TestCase
     {
         $this->get('/voluntarios')->assertOk()->assertSee('name="document_number"', false)->assertSee('Cédula de ciudadanía');
         $this->get('/')->assertOk()->assertSee('id="registro"', false);
+    }
+
+    public function test_volunteer_options_include_zone_leader_and_no_electoral_terms(): void
+    {
+        $options = config('laura.tipos_voluntariado');
+        $this->assertContains('Líder de zona', $options);
+
+        // Tono neutral: sin roles de campaña electoral.
+        $this->assertNotContains('Testigo electoral', $options);
+        $this->assertNotContains('Puerta a puerta', $options);
+
+        $this->get('/voluntarios')->assertOk()
+            ->assertSee('Líder de zona')
+            ->assertDontSee('Testigo electoral');
     }
 
     public function test_registration_saves_normalized_data(): void

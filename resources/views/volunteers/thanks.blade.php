@@ -12,7 +12,7 @@
         <h1 class="display-sm">¡Gracias por sumarse{{ $greeting ? ', '.$greeting : '' }}!</h1>
         <p class="lead lead-lg">Un coordinador le escribirá por WhatsApp o correo en menos de 48 horas.</p>
         <div class="btn-row">
-            <a href="{{ route('proposals') }}" class="btn btn-blue">Conozca las propuestas</a>
+            <a href="{{ route('vision') }}" class="btn btn-blue">Conozca la visión</a>
             <a href="{{ route('home') }}" class="btn btn-outline">Volver al inicio</a>
         </div>
     </section>

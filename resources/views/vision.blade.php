@@ -2,24 +2,24 @@
 
 @php $p = config('laura.persona'); @endphp
 
-@section('title', 'Propuestas para '.$p['municipio'])
-@section('description', 'Propuestas de Laura Rivera para Villa del Rosario en vivienda, seguridad, empleo, movilidad, salud, educación y patrimonio.')
+@section('title', 'Visión del municipio')
+@section('description', 'La visión de Laura Rivera para '.$p['municipio'].': siete ejes de trabajo en vivienda, seguridad, empleo, movilidad, salud, educación y patrimonio.')
 
 @section('content')
     <section class="page-hero container">
-        <span class="eyebrow">Ideas para el municipio</span>
-        <h1 class="display-sm">Propuestas para {{ $p['municipio'] }}</h1>
-        <p class="lead lead-lg">Siete ejes de trabajo construidos desde la experiencia en vivienda, gestión de proyectos y el contacto directo con barrios y veredas.</p>
+        <span class="eyebrow">Una visión para el municipio</span>
+        <h1 class="display-sm">Visión del municipio</h1>
+        <p class="lead lead-lg">Siete ejes de trabajo pensados desde la experiencia en vivienda, gestión de proyectos y el contacto directo con barrios y veredas de {{ $p['municipio'] }}.</p>
     </section>
 
     <section class="section container stack-lg">
-        @include('partials.proposals')
+        @include('partials.vision')
     </section>
 
     {{-- Listado completo (sin pestañas) para lectura y rastreo --}}
     <section class="band-cream">
         <div class="container section stack-lg">
-            <h2 class="h2-sm">Todas las propuestas</h2>
+            <h2 class="h2-sm">Todos los ejes de la visión</h2>
             <div class="proposal-grid">
                 @foreach (config('laura.ejes') as $eje)
                     <article class="proposal-card">

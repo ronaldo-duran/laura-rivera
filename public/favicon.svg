@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Laura Rivera">
+  <title>Laura Rivera</title>
+  <rect width="64" height="64" rx="14" fill="#0b2a5b"/>
+  <g transform="translate(7.000,45.042) scale(0.03388,-0.03388)" fill="#f2c230">
+    <path transform="translate(-42.00,0)" d="M299 57H548Q577 96 596.0 135.5Q615 175 639 234H691L649 0H42V37L127 56V714L42 733V770H393V733L299 713Z"/>
+    <path transform="translate(620.00,0)" d="M127 59V712L42 733V770H403Q524 770 597.0 712.5Q670 655 670 551Q670 479 634.0 429.5Q598 380 530 356L723 56L814 37V0H541L340 335H299V59L413 37V0H42V37ZM455 443Q495 489 495 561Q495 613 471.5 650.0Q448 687 408 703Q375 716 320 716H299V389H313Q365 389 399.0 403.0Q433 417 455 443Z"/>
+  </g>
+</svg>
