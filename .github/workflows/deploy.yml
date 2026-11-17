@@ -73,7 +73,8 @@ jobs:
             --exclude='tests' \
             --exclude='.github' \
             --exclude='.env' \
-            --exclude='.env.*' \
+            --exclude='.env.backup' \
+            --exclude='.env.production' \
             --exclude='auth.json' \
             --exclude='storage/logs/*' \
             --exclude='storage/framework/cache/data/*' \
@@ -85,7 +86,8 @@ jobs:
           # ni Node). Este .gitignore reemplaza al del repo fuente.
           cat > deploy-tree/.gitignore <<'EOF'
           .env
-          .env.*
+          .env.backup
+          .env.production
           auth.json
           /storage/logs/*
           !/storage/logs/.gitignore
